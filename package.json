@@ -1,0 +1,23 @@
+{
+  "name": "@cryptoactions/sdk",
+  "version": "1.0.0",
+  "description": "A lib to interact with the oracle network.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cryptoactions/sdk.git"
+  },
+  "author": "mktcode",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cryptoactions/sdk/issues"
+  },
+  "homepage": "https://github.com/cryptoactions/sdk#readme",
+  "dependencies": {
+    "ethers": "^5.4.6",
+    "octokit": "^1.4.0"
+  }
+}
