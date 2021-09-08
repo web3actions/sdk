@@ -1,33 +1,41 @@
-import { Octokit } from 'octokit'
+import axios from 'axios'
 
-const processRequest = async (requestId, signatureId, oracleRepo, auth) => {
-  // post issue in oracle repo
-  const octokit = new Octokit({ auth })
-  const issue = await octokit.rest.issues.create({
-    owner: oracleRepo.split('/')[0],
-    repo: oracleRepo.split('/')[1],
-    title: 'Oracle Request',
-    body: JSON.stringify({ requestId, signatureId })
-  })
-  
-  // check periodically for confirmations/signatures
-  return {
-    getStatus: async () => {
-      const comments = await octokit.request('GET /repos/{owner}/{repo}/issues/{issue_number}/comments', {
-        owner: oracleRepo.split('/')[0],
-        repo: oracleRepo.split('/')[1],
-        issue_number: issue.number,
-        per_page: 100
-      })
+const githubApiUrl = 'https://api.github.com'
 
-      const statusComment = comments.find(comment => comment.body.startsWith('Processing...'))
-      if (statusComment) {
-        return statusComment.body
+const processRequest = async (requestId, signatureId, destination, githubToken = null) => {
+  if (destination.startsWith('https://')) {
+    // post request to api endpoint
+    return await axios.post(destination, { requestId, signatureId })
+  } else if (/[\w-]+\/[\w-]+/.test(destination)) {
+    // post request as issue in oracle repo
+    return await axios.post(
+      `${githubApiUrl}/repos/${destination.split('/')[0]}/${destination.split('/')[1]}/issues`,
+      {
+        title: 'Oracle Request',
+        body: JSON.stringify({ requestId, signatureId })
+      },
+      {
+        headers: {
+          Authorization: 'token ' + githubToken
+        }
       }
-
-      return null
-    }
+    ).then(response => response.data)
+  } else {
+    throw new Error('Invalid destination: ' + destination)
   }
 }
 
-export { processRequest }
+const getFirstDeepestValue = (object) => {
+  if (typeof object === 'string' || typeof object === 'number' || typeof object === 'boolean') {
+    return object
+  }
+
+  const keys = Object.keys(object)
+  if (keys.length && !Array.isArray(object)) {
+    return getFirstDeepestValue(object[keys[0]])
+  }
+
+  return null
+}
+
+export { processRequest, getFirstDeepestValue }
