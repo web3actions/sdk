@@ -1,11 +1,8 @@
 {
   "name": "@cryptoactions/sdk",
-  "version": "1.0.0",
-  "description": "A lib to interact with the oracle network.",
+  "version": "0.0.1",
+  "description": "A lib of helpful functions.",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cryptoactions/sdk.git"
