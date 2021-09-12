@@ -1,6 +1,43 @@
 import axios from 'axios'
+import { decode } from 'js-base64'
 
 const githubApiUrl = 'https://api.github.com'
+
+const getConfig = async function (owner, githubToken = null) {
+  let repo = owner
+  if (/[\w-]+\/[\w-]+/.test(owner)) {
+    [ owner, repo ] = owner.split('/')
+  }
+  
+  const auth = {}
+  if (githubToken) {
+    auth.headers = {
+      Authorization: 'token ' + githubToken
+    }
+  }
+  
+  // fetch file list from repo
+  const repoContent = await axios.get(`${githubApiUrl}/repos/${owner}/${repo}/contents`, auth).then(response => response.data)
+  
+  // check if a .crypto.json file exists
+  const cryptoJsonFile = repoContent.find(file => file.type === 'file' && file.name === 'crypto.json')
+  if (cryptoJsonFile) {
+    const cryptoJson = await axios.get(`${githubApiUrl}/repos/${owner}/${repo}/contents/crypto.json`, auth).then(response => response.data)
+    return JSON.parse(decode(cryptoJson.content))
+  }
+
+  // otherwise look for "crypto" section in package.json
+  const packageJsonFile = repoContent.find(file => file.type === 'file' && file.name === 'package.json')
+  if (packageJsonFile) {
+    const packageJsonContent = await axios.get(`${githubApiUrl}/repos/${owner}/${repo}/contents/package.json`, auth).then(response => response.data)
+    const packageJson = JSON.parse(decode(packageJsonContent.content))
+    if (Object.prototype.hasOwnProperty.call(packageJson, 'crypto')) {
+      return packageJson.crypto
+    }
+  }
+
+  return null
+}
 
 const processRequest = async (requestId, destination, githubToken = null) => {
   if (destination.startsWith('https://')) {
@@ -8,8 +45,9 @@ const processRequest = async (requestId, destination, githubToken = null) => {
     return await axios.post(destination, { requestId })
   } else if (/[\w-]+\/[\w-]+/.test(destination)) {
     // post request as issue in oracle repo
+    const [ owner, repo ] = destination.split('/')
     return await axios.post(
-      `${githubApiUrl}/repos/${destination.split('/')[0]}/${destination.split('/')[1]}/issues`,
+      `${githubApiUrl}/repos/${owner}/${repo}/issues`,
       {
         title: 'Oracle Request',
         body: JSON.stringify({ requestId })
@@ -38,4 +76,4 @@ const getFirstDeepestValue = (object) => {
   return null
 }
 
-export { processRequest, getFirstDeepestValue }
+export { getConfig, processRequest, getFirstDeepestValue }
