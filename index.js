@@ -2,17 +2,17 @@ import axios from 'axios'
 
 const githubApiUrl = 'https://api.github.com'
 
-const processRequest = async (requestId, signatureId, destination, githubToken = null) => {
+const processRequest = async (requestId, destination, githubToken = null) => {
   if (destination.startsWith('https://')) {
     // post request to api endpoint
-    return await axios.post(destination, { requestId, signatureId })
+    return await axios.post(destination, { requestId })
   } else if (/[\w-]+\/[\w-]+/.test(destination)) {
     // post request as issue in oracle repo
     return await axios.post(
       `${githubApiUrl}/repos/${destination.split('/')[0]}/${destination.split('/')[1]}/issues`,
       {
         title: 'Oracle Request',
-        body: JSON.stringify({ requestId, signatureId })
+        body: JSON.stringify({ requestId })
       },
       {
         headers: {
