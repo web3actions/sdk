@@ -2,8 +2,9 @@
   "name": "@cryptoactions/sdk",
   "version": "0.0.2",
   "description": "A lib of helpful functions.",
-  "main": "index.js",
   "type": "module",
+  "main": "dist/main.js",
+  "module": "src/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cryptoactions/sdk.git"
@@ -18,5 +19,9 @@
     "axios": "^0.21.4",
     "ethers": "^5.4.6",
     "js-base64": "^3.7.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.52.1",
+    "webpack-cli": "^4.8.0"
   }
 }
