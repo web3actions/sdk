@@ -1,6 +1,6 @@
 {
   "name": "@cryptoactions/sdk",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A lib of helpful functions.",
   "type": "module",
   "main": "dist/main.js",
