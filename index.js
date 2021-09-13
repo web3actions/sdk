@@ -63,6 +63,29 @@ const processRequest = async (requestId, destination, githubToken = null) => {
   }
 }
 
+const countContributions = async (username, githubToken) => {
+  return await axios.post(
+    'https://api.github.com/graphql',
+    {
+      query: `query($username:String!) {
+        user(login: $username) {
+          contributionsCollection (to: "2021-10-01T00:00:00.000+00:00") {
+            contributionCalendar {
+              totalContributions
+            }
+          }
+        }
+      }`,
+      variables: { username }
+    },
+    {
+      headers: {
+        Authorization: 'token ' + githubToken
+      }
+    }
+  ).then(res => res.data.data.user.contributionsCollection.contributionCalendar.totalContributions)
+}
+
 const getFirstDeepestValue = (object) => {
   if (typeof object === 'string' || typeof object === 'number' || typeof object === 'boolean') {
     return object
@@ -76,4 +99,4 @@ const getFirstDeepestValue = (object) => {
   return null
 }
 
-export { getConfig, processRequest, getFirstDeepestValue }
+export { getConfig, processRequest, countContributions, getFirstDeepestValue }
