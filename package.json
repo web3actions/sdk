@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "A lib of helpful functions.",
   "main": "index.js",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cryptoactions/sdk.git"
