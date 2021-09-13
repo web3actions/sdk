@@ -1,5 +1,5 @@
-import axios from 'axios'
-import { decode } from 'js-base64'
+const axios = require('axios')
+const { decode } = require('js-base64')
 
 const githubApiUrl = 'https://api.github.com'
 
@@ -99,4 +99,4 @@ const getFirstDeepestValue = (object) => {
   return null
 }
 
-export { getConfig, processRequest, countContributions, getFirstDeepestValue }
+module.exports = { getConfig, processRequest, countContributions, getFirstDeepestValue }
