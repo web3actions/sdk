@@ -1,28 +1,21 @@
-# Crypto Actions SDK
-
-A lib of helpful functions.
+# Web3 Actions SDK
 
 ## Get Repo Config
 
-Read the Crypto Actions configuration from a repository's `cryptoactions.json` or `package.json`.
+Read the Web3 configuration (mostly a receiving address) from a repository's `web3.json` or "web3" section in the `package.json`.
 
 ```javascript
-import { getConfig } from '@cryptoactions/sdk'
+import { getConfig } from '@web3actions/sdk'
 
 // config of repo
-const { ethereum: { address }} = await getConfig('cryptoactions/oracle')
-console.log(address) // 0x....
+const { ethereum: { address }} = await getConfig('web3actions/signer')
 
 // config of user (repo: mktcode/mktcode)
 const { ethereum: { address }} = await getConfig('mktcode')
-console.log(address) // 0x....
 
-```
+// use access token to avoid rate limits
+const { ethereum: { address }} = await getConfig('mktcode', 'gho_...')
 
-## Process Data Request
-
-Trigger an oracle workflow to process a data request, stored on a smart contract implementing [`GithubDataReceiver.sol`](https://github.com/cryptoactions/contracts/blob/main/src/GithubDataReceiver.sol).
-
-```javascript
-const request = await processRequest(event.args.requestId, 'cryptoactions/oracle', githubAccessToken)
+// read config with different name (myproject.json or "myproject" in package.json)
+const { ethereum: { address }} = await getConfig('mktcode', null, 'myproject')
 ```

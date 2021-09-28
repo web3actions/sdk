@@ -1,18 +1,18 @@
 {
-  "name": "@cryptoactions/sdk",
+  "name": "@web3actions/sdk",
   "version": "0.0.6",
   "description": "A lib of helpful functions.",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cryptoactions/sdk.git"
+    "url": "git+https://github.com/web3actions/sdk.git"
   },
   "author": "mktcode",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/cryptoactions/sdk/issues"
+    "url": "https://github.com/web3actions/sdk/issues"
   },
-  "homepage": "https://github.com/cryptoactions/sdk#readme",
+  "homepage": "https://github.com/web3actions/sdk#readme",
   "dependencies": {
     "axios": "^0.21.4",
     "ethers": "^5.4.6",
