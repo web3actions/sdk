@@ -1,6 +1,6 @@
 {
   "name": "@web3actions/sdk",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A lib of helpful functions.",
   "main": "index.js",
   "repository": {
