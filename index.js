@@ -39,4 +39,40 @@ const getConfig = async function (owner, githubToken = null, configName = 'web3'
   return null
 }
 
-module.exports = { getConfig }
+const countContributionsRange = async (username, githubToken, from, to) => {
+  return await axios.post(
+    'https://api.github.com/graphql',
+    {
+      query: `query($username:String!, $from:DateTime!, $to:DateTime!) {
+        user(login: $username) {
+          contributionsCollection (from: $from, to: $to) {
+            contributionCalendar {
+              totalContributions
+            }
+          }
+        }
+      }`,
+      variables: { username, from, to }
+    },
+    {
+      headers: {
+        Authorization: 'token ' + githubToken
+      }
+    }
+  ).then(res => res.data.data.user.contributionsCollection.contributionCalendar.totalContributions)
+}
+
+const countContributions = async (username, githubToken, fromYear = 2007, toYear = new Date().getFullYear()) => {
+  let count = 0
+  for (let year = fromYear; year <= toYear; year++) {
+    count += await countContributionsRange(
+      username,
+      githubToken,
+      `${year}-01-01T00:00:00.000+00:00`,
+      `${year + 1}-01-01T00:00:00.000+00:00`
+    )
+  }
+  return count
+}
+
+module.exports = { getConfig, countContributions }
